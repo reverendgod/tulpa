@@ -1,0 +1,28 @@
+<nav class="top-nav">
+  <div class="top-nav-links">
+    <a href="#hero" (click)="scrollTo('hero', $event)" class="nav-link">ГЛАВНАЯ</a>
+    <a href="#works" (click)="scrollTo('works', $event)" class="nav-link">АЛЬБОМЫ</a>
+    <a href="#about" (click)="scrollTo('about', $event)" class="nav-link">О СЕБЕ</a>
+    <a href="#contacts" (click)="scrollTo('contacts', $event)" class="nav-link">СВЯЗАТЬСЯ</a>
+  </div>
+</nav>
+
+
+<app-hero id="hero"></app-hero>
+<section id="works">
+  <div class="home-section-wrapper">
+    <div class="section-side-marker">Альбомы</div>
+  </div>
+  <app-gallery></app-gallery>
+</section>
+
+<section id="about">
+  <div class="home-section-wrapper">
+    <div class="section-side-marker">О себе</div>
+  </div>
+  <app-story></app-story>
+</section>
+
+<footer class="site-footer">
+  <p>© 2026 TULPA. ВСЕ ПРАВА ЗАЩИЩЕНЫ.</p>
+</footer>

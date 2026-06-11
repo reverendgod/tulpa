@@ -1,0 +1,168 @@
+.category-page-container {
+    background: transparent;
+    min-height: 100vh;
+    padding: 120px 40px 60px 40px;
+    box-sizing: border-box;
+    position: relative;
+    z-index: 5;
+}
+
+/* Элегантное затемнение для страницы категории поверх глобального фона */
+.category-page-container::before {
+    content: "";
+    position: fixed;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    background: radial-gradient(circle at center, transparent 0%, rgba(0, 0, 0, 0.7) 100%),
+                linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, transparent 25%, #050505 95%);
+    z-index: -1;
+    pointer-events: none;
+}
+
+.category-header {
+    margin-bottom: 80px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+    text-align: center;
+}
+
+.back-link {
+    text-align: left;
+    color: #777777;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 3px;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: color 0.3s ease;
+    width: fit-content;
+}
+
+.back-link:hover {
+    color: #ffffff;
+}
+
+.category-page-title {
+    color: #ffffff;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 3.5rem;
+    letter-spacing: 6px;
+    font-weight: 400;
+    font-style: italic;
+    margin: 0;
+    text-transform: uppercase;
+    text-shadow: 0 5px 15px rgba(0, 0, 0, 0.8);
+}
+
+/* СЕТКА ДЛЯ СЕТОВ */
+.albums-panel-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 60px 40px;
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* КАРТОЧКА СЕТА В ЖУРНАЛЬНОМ СТИЛЕ */
+.album-panel-card {
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    overflow: visible;
+    transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.album-viewport {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+    background-color: transparent;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
+}
+
+.album-viewport img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top; 
+    filter: grayscale(15%);
+    transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1), filter 0.4s ease;
+}
+
+/* ХОВЕР ОВЕРЛЕЙ */
+.album-hover-overlay {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.view-album-btn {
+    color: #ffffff;
+    background-color: transparent;
+    border: 1px solid #ffffff;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 400;
+    letter-spacing: 3px;
+    padding: 14px 28px;
+    transform: scale(0.95);
+    transition: transform 0.4s ease, background-color 0.4s ease, color 0.4s ease;
+}
+
+/* ЭФФЕКТЫ ПРИ НАВЕДЕНИИ КУРСОРA */
+.album-panel-card:hover {
+    transform: translateY(-8px);
+}
+
+.album-panel-card:hover .album-viewport img {
+    transform: scale(1.05);
+    filter: grayscale(0%);
+}
+
+.album-panel-card:hover .album-hover-overlay {
+    opacity: 1;
+}
+
+.album-panel-card:hover .view-album-btn {
+    transform: scale(1);
+    background-color: #ffffff;
+    color: #000000;
+}
+
+.album-meta {
+    padding: 25px 0 0 0;
+    background: transparent;
+    text-align: center;
+}
+
+.album-title {
+    color: #a0a0a0;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.8rem;
+    letter-spacing: 4px;
+    margin: 0;
+    text-transform: uppercase;
+    font-weight: 300;
+    transition: color 0.3s ease;
+}
+
+.album-panel-card:hover .album-title {
+    color: #ffffff;
+}
+
+.no-albums-message {
+    color: #555;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.85rem;
+    letter-spacing: 2px;
+    text-align: center;
+    margin-top: 50px;
+}

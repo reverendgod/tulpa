@@ -1,0 +1,160 @@
+/* ==========================================================================
+   ГЛОБАЛЬНАЯ ОПТИМИЗАЦИЯ СТРАНИЦЫ ИБОРЬБА С ЦВЕТНЫМИ КРУГАМИ
+   ========================================================================== */
+
+/* ==========================================================================
+   НАВИГАЦИЯ
+   ========================================================================== */
+.top-nav {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    padding: 30px 40px;
+    display: flex;
+    justify-content: flex-end;
+    z-index: 9999;
+    font-family: 'Inter', sans-serif;
+    transition: all 0.3s ease;
+}
+
+.top-nav-links {
+    display: flex;
+    gap: 30px;
+    background: rgba(10, 10, 10, 0.4);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 12px 24px;
+    border-radius: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.nav-link {
+    color: #999;
+    text-decoration: none;
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+    transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+    color: #fff;
+}
+
+@media (max-width: 768px) {
+    /* На мобилке скрываем жестко прибитую навигацию и делаем её скроллируемой сверху
+       или делаем по центру и меньше, чтобы не мешала контенту */
+    .top-nav {
+        position: absolute;
+        justify-content: center;
+        padding: 20px 10px;
+    }
+    
+    .top-nav-links {
+        gap: 15px;
+        padding: 10px 20px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .nav-link {
+        font-size: 0.7rem;
+        letter-spacing: 1px;
+    }
+}
+
+.home-section-wrapper > *:last-child{
+   position: relative;
+    width: 100%;
+    max-width: 1200px; 
+    margin: 0 auto;
+    box-sizing: border-box;
+    /* Убираем фиксированную высоту, если она была, чтобы контент не растягивался искусственно */
+    min-height: auto !important; 
+    /* Задаем аккуратный отступ снизу ПЕРЕД футером, чтобы карточка не липла к линии */
+    padding-bottom: 40px;
+}
+
+/* ТЕХНИЧЕСКИЕ МАРКЕРЫ СЛЕВА */
+.section-side-marker {
+    position: absolute;
+    top: 60px;         
+    left: -220px;     
+    
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.8rem;
+    font-weight: 400;
+    font-style: italic;
+    letter-spacing: 3px;
+    color: #999999;    
+    text-transform: uppercase;
+    
+    white-space: nowrap;
+    user-select: none;
+    pointer-events: none;
+    z-index: 6;
+}
+
+@media (max-width: 1500px) {
+    .section-side-marker {
+        left: -80px; 
+    }
+}
+
+@media (max-width: 1400px) {
+    .section-side-marker {
+        position: relative;
+        top: 0;
+        left: 0;
+        text-align: left;
+        padding-left: 20px;
+        margin-bottom: 15px;
+        display: block;
+    }
+}
+
+@media (max-width: 768px) {
+    .home-section-wrapper {
+        padding: 0 10px;
+    }
+    .section-side-marker {
+        text-align: left;
+        padding-left: 10px;
+    }
+}
+
+/* ==========================================================================
+   ФУТЕР
+   ========================================================================== */
+.site-footer {
+   text-align: center;
+    padding: 15px 2cqi;
+    border-top: 1px solid rgba(255, 255, 255, 0.03); /* Сделали линию еще более незаметной */
+    /* Убираем margin-top, так как мы уже настроили padding-bottom у контента */
+    margin-top: 0; 
+    position: relative;
+    z-index: 10;
+    /* Задаем тот же цвет, что и у подложки страницы, чтобы убрать градиентные переходы */
+    background: transparent;
+}
+
+.site-footer p {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 4px;
+    color: #444444;
+    text-transform: uppercase;
+    margin: 0;
+    line-height: 1;
+}
+
+@media (max-width: 768px) {
+    .site-footer {
+        padding: 8px 10px; /* Сильно уменьшаем размер футера на мобилках */
+        margin-top: 20px;
+    }
+    .site-footer p {
+        font-size: 0.6rem;
+        letter-spacing: 2px;
+    }
+}

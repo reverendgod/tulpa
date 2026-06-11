@@ -1,0 +1,31 @@
+<div class="category-page-container">
+  
+  <header class="category-header">
+    <div class="back-link" (click)="goBackToGallery()">
+      В альбомы
+    </div>
+    <h1 class="category-page-title">{{ getReadableHeader() }}</h1>
+  </header>
+
+  <div class="albums-panel-grid" *ngIf="sets.length > 0; else noSets">
+    
+    <div class="album-panel-card" *ngFor="let set of sets" (click)="openSet(set.id)">
+      <div class="album-viewport">
+        <img *ngIf="set.coverUrl" [src]="set.coverUrl" [alt]="set.displayName">
+        <div class="album-hover-overlay">
+          <span class="view-album-btn">ОТКРЫТЬ СЕТ</span>
+        </div>
+      </div>
+      <div class="album-meta">
+        <h3 class="album-title">{{ set.displayName }}</h3>
+      </div>
+    </div>
+
+  </div>
+
+  <ng-template #noSets>
+    <div class="no-albums-message">
+      <p>В ДАННОМ РАЗДЕЛЕ ЕЩЕ НЕТ ЗАГРУЖЕННЫХ СЕТОВ</p>
+    </div>
+  </ng-template>
+</div>

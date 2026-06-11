@@ -1,0 +1,461 @@
+/* =======================================================
+   1. ИЗОЛЯЦИЯ ФОНА И КОНТЕНТА АДМИНКИ
+   ======================================================= */
+:host {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw !important;
+    height: 100vh !important;
+    background-color: #0a0a0a !important; /* Убираем прозрачность и размытия */
+    background-image: none !important;
+    backdrop-filter: none !important;
+    filter: none !important;
+    overflow-y: auto;
+    z-index: 99999 !important;
+    box-sizing: border-box;
+}
+
+/* Контейнер для центровки */
+.admin-container {
+    width: 100%;
+    max-width: 650px;
+    margin: 0 auto !important;
+    padding: 80px 20px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 35px;
+    font-family: 'Inter', sans-serif;
+}
+
+/* =======================================================
+   2. КАРТОЧКИ БЛОКОВ (МАТОВЫЙ СТРОГИЙ СТИЛЬ)
+   ======================================================= */
+
+.back-to-site-btn {
+    display: inline-block !important;
+    padding: 10px 20px !important;
+    background-color: transparent !important;
+    color: #888888 !important;
+    border: 1px solid #333333 !important;
+    font-size: 0.75rem !important;
+    letter-spacing: 2px !important;
+    text-transform: uppercase !important;
+    text-decoration: none !important;
+    border-radius: 2px !important;
+    transition: all 0.2s ease !important;
+}
+
+.back-to-site-btn:hover {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    border-color: #ffffff !important;
+}
+
+.admin-card {
+    background: #0f0f0f !important;
+    border: 1px solid #1a1a1a !important;
+    padding: 35px !important;
+    border-radius: 4px !important;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5) !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+/* Заголовки */
+.admin-header-title {
+    font-size: 1.1rem !important;
+    letter-spacing: 3px !important;
+    text-transform: uppercase;
+    font-weight: 500 !important;
+    color: #ffffff !important;
+    text-align: center !important;
+    margin: 0 0 10px 0 !important;
+}
+
+h2 {
+    font-size: 0.85rem !important;
+    color: #555555 !important;
+    margin-top: 0 !important;
+    margin-bottom: 25px !important;
+    letter-spacing: 2px !important;
+    text-transform: uppercase;
+    font-weight: 600;
+    border-bottom: 1px solid #161616;
+    padding-bottom: 12px;
+}
+
+.form-group {
+    margin-bottom: 25px !important;
+    display: block;
+    width: 100%;
+}
+
+.form-label {
+    font-size: 0.75rem !important;
+    letter-spacing: 1px !important;
+    color: #888888 !important;
+    display: block;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+}
+
+/* =======================================================
+   3. ИНПУТЫ, СЕЛЕКТЫ И ТЕКСТОВЫЕ ЗОНЫ
+   ======================================================= */
+.admin-form input[type="text"], 
+.admin-form select,
+.admin-form textarea {
+    width: 100% !important;
+    max-width: 100% !important;
+    background-color: #121212 !important;
+    border: 1px solid #222222 !important;
+    color: #ffffff !important;
+    padding: 14px 16px !important;
+    font-size: 0.85rem !important;
+    letter-spacing: 1px !important;
+    border-radius: 2px !important;
+    outline: none !important;
+    box-sizing: border-box !important;
+    display: block;
+    font-family: 'Inter', sans-serif;
+}
+
+.admin-form input[type="text"]:focus,
+.admin-form select:focus,
+.admin-form textarea:focus {
+    border-color: #444444 !important;
+    background-color: #141414 !important;
+}
+
+.admin-form input[type="file"] {
+    width: 100% !important;
+    color: #555555 !important;
+    font-size: 0.8rem !important;
+    margin-top: 5px;
+}
+
+/* =======================================================
+   4. СЕТКА СУЩЕСТВУЮЩИХ ФОТОГРАФИЙ (ДВЕ КОЛОНКИ)
+   ======================================================= */
+.photos-management-grid {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important; /* Ровные две колонки */
+    gap: 20px !important;
+    width: 100% !important;
+    margin-top: 20px !important;
+}
+
+.photo-manage-card {
+    background: #121212 !important;
+    border: 1px solid #1d1d1d !important;
+    padding: 15px !important;
+    border-radius: 2px !important;
+    position: relative !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+    box-sizing: border-box !important;
+}
+
+.photo-manage-thumb {
+    width: 100% !important;
+    height: 130px !important;
+    overflow: hidden !important;
+    border: 1px solid #222 !important;
+    border-radius: 2px !important;
+}
+
+.photo-manage-thumb img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+}
+
+.photo-manage-inputs input[type="text"] {
+    padding: 8px 10px !important;
+    font-size: 0.8rem !important;
+    margin-bottom: 8px !important;
+}
+
+.photo-manage-inputs textarea {
+    min-height: 50px !important;
+    padding: 8px 10px !important;
+    font-size: 0.75rem !important;
+    margin-bottom: 10px !important;
+}
+
+/* КРЕСТИК УДАЛЕНИЯ */
+.photo-delete-badge {
+    position: absolute !important;
+    top: 5px !important;
+    right: 5px !important;
+    background: rgba(170, 51, 51, 0.85) !important;
+    color: #ffffff !important;
+    border: none !important;
+    width: 24px !important;
+    height: 24px !important;
+    border-radius: 50% !important;
+    font-size: 1rem !important;
+    line-height: 22px !important;
+    text-align: center !important;
+    cursor: pointer !important;
+    padding: 0 !important;
+    z-index: 12 !important;
+}
+.photo-delete-badge:hover {
+    background: #ff3333 !important;
+}
+
+/* ЗОЛОТИСТАЯ МАТОВАЯ ПЛАШКА ОБЛОЖКИ */
+.main-cover-badge {
+    position: absolute !important;
+    top: 5px !important;
+    left: 5px !important;
+    background: #c39b62 !important;
+    color: #000000 !important;
+    font-size: 0.65rem !important;
+    font-weight: 700 !important;
+    padding: 3px 8px !important;
+    border-radius: 2px !important;
+    letter-spacing: 1px !important;
+    z-index: 11 !important;
+}
+
+/* Ряд кнопок действия внутри карточки кадра */
+.photo-card-actions {
+    display: flex !important;
+    gap: 10px !important;
+    width: 100% !important;
+}
+
+.card-action-btn {
+    flex: 1 !important;
+    padding: 10px !important;
+    font-size: 0.75rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    border-radius: 2px !important;
+    border: none !important;
+}
+
+.save-metadata-btn {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+}
+.save-metadata-btn:hover {
+    background-color: #e5e5e5 !important;
+}
+
+/* КНОПКА УСТАНОВКИ ОБЛОЖКИ (ОБНОВЛЕННАЯ) */
+.set-main-btn {
+    background-color: #1a1a1a !important;
+    border: 1px solid #333333 !important; /* Сделали границу светлее и заметнее */
+    color: #cccccc !important; /* Текст теперь не серый, а почти белый */
+    transition: all 0.2s ease !important;
+}
+
+/* ЭФФЕКТ ПРИ НАВЕДЕНИИ КУРСОРA */
+.set-main-btn:hover {
+    background-color: #2a2a2a !important; /* Кнопка будет заметно светлеть при наведении */
+    border-color: #ffffff !important;
+    color: #ffffff !important;
+}
+
+/* =======================================================
+   5. ОЧЕРЕДИ ПАКЕТНОЙ ЗАГРУЗКИ (ДОБАВЛЕНИЕ)
+   ======================================================= */
+.upload-queue {
+    width: 100% !important;
+    margin-top: 25px !important;
+    margin-bottom: 25px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 15px !important;
+}
+
+.queue-item {
+    display: flex !important;
+    align-items: center !important;
+    gap: 15px !important;
+    background: #121212 !important;
+    border: 1px solid #1a1a1a !important;
+    padding: 10px !important;
+    border-radius: 2px !important;
+}
+
+.queue-thumb {
+    width: 50px !important;
+    height: 50px !important;
+    border-radius: 2px !important;
+    overflow: hidden !important;
+    flex-shrink: 0 !important;
+    border: 1px solid #222222 !important;
+}
+
+.queue-thumb img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+}
+
+.queue-input-box {
+    flex: 1 !important;
+}
+
+/* =======================================================
+   6. ГЛАВНЫЕ КНОПКИ ДЕЙСТВИЙ И ЗАЯВКИ
+   ======================================================= */
+.action-buttons-group {
+    display: flex !important;
+    gap: 15px !important;
+    width: 100% !important;
+    margin-top: 20px !important;
+    margin-bottom: 20px !important;
+}
+
+.submit-btn {
+    width: 100% !important;
+    padding: 16px !important;
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    border: 1px solid #ffffff !important;
+    font-weight: 700 !important;
+    font-size: 0.8rem !important;
+    letter-spacing: 2px !important;
+    text-transform: uppercase !important;
+    cursor: pointer !important;
+    border-radius: 2px !important;
+    transition: all 0.2s ease !important;
+}
+.submit-btn:hover {
+    background-color: transparent !important;
+    color: #ffffff !important;
+}
+.submit-btn:disabled {
+    background-color: #1c1c1c !important;
+    border-color: #1c1c1c !important;
+    color: #444444 !important;
+    cursor: not-allowed !important;
+}
+
+.edit-btn {
+    background-color: #1a1a1a !important;
+    border-color: #222222 !important;
+    color: #ffffff !important;
+}
+.edit-btn:hover {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+}
+
+.delete-btn {
+    background-color: transparent !important;
+    border-color: #331111 !important;
+    color: #aa4444 !important;
+}
+.delete-btn:hover {
+    background-color: #aa3333 !important;
+    border-color: #aa3333 !important;
+    color: #ffffff !important;
+}
+
+.feedback-list {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 15px !important;
+}
+
+.feedback-item {
+    background: #121212 !important;
+    border: 1px solid #161616 !important;
+    padding: 20px !important;
+    border-radius: 2px !important;
+    transition: all 0.3s ease !important;
+}
+
+.unread-feedback {
+    border-color: #333333 !important;
+    background: #181818 !important;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.05) !important;
+}
+
+.feedback-header {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: flex-start !important;
+    margin-bottom: 15px !important;
+    border-bottom: 1px solid #1c1c1c !important;
+    padding-bottom: 15px !important;
+}
+
+.feedback-info {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 6px !important;
+}
+
+.unread-indicator {
+    display: inline-block !important;
+    background: #c39b62 !important;
+    color: #000 !important;
+    font-size: 0.65rem !important;
+    font-weight: 700 !important;
+    padding: 3px 8px !important;
+    border-radius: 2px !important;
+    letter-spacing: 1px !important;
+    text-transform: uppercase !important;
+    margin-bottom: 5px !important;
+    align-self: flex-start !important;
+}
+
+.feedback-actions {
+    display: flex !important;
+    gap: 10px !important;
+    flex-direction: column !important;
+    align-items: flex-end !important;
+}
+
+.feedback-action-btn {
+    padding: 8px 12px !important;
+    font-size: 0.7rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    border-radius: 2px !important;
+    border: 1px solid transparent !important;
+    transition: all 0.2s ease !important;
+    width: 200px !important;
+    text-align: center !important;
+}
+
+.toggle-read-btn {
+    background-color: #1a1a1a !important;
+    border-color: #333333 !important;
+    color: #cccccc !important;
+}
+
+.toggle-read-btn:hover {
+    background-color: #2a2a2a !important;
+    border-color: #ffffff !important;
+    color: #ffffff !important;
+}
+
+.feedback-text {
+    font-size: 0.85rem !important;
+    line-height: 1.5 !important;
+    color: #888888 !important;
+    margin: 0 !important;
+}
+
+.feedback-message {
+    font-size: 0.85rem !important;
+    line-height: 1.6 !important;
+    color: #ffffff !important;
+    margin: 0 !important;
+}

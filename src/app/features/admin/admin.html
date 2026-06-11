@@ -1,0 +1,196 @@
+<div class="admin-container">
+  
+  <div style="text-align: center; margin-bottom: 20px;">
+    <a routerLink="/" class="back-to-site-btn">← Вернуться на сайт</a>
+  </div>
+
+  <h1 class="admin-header-title">Панель управления // TULPA</h1>
+
+  <div class="admin-card">
+    <h2>Создание альбома</h2>
+    
+    <div class="admin-form">
+      <div class="form-group">
+        <label class="form-label">Вид съёмки</label>
+        <select [(ngModel)]="newAlbumCategory" style="margin-bottom: 15px;">
+          <option value="art-shoots">Художественная съёмка</option>
+          <option value="reportage">Репортажная съёмка</option>
+          <option value="commercial">Предметная съёмка</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Название нового альбома</label>
+        <input 
+          type="text" 
+          [(ngModel)]="newAlbumName" 
+          placeholder="Название альбома">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Выберите фотографии для нового альбома</label>
+        <input 
+          type="file" 
+          #fileInput1
+          accept="image/*" 
+          multiple 
+          (change)="onFilesSelected($event, 'create')">
+      </div>
+
+      <div class="upload-queue" *ngIf="uploadQueueCreate.length > 0">
+        <label class="form-label" style="color: #666; margin-bottom: 15px;">Название и описание кадра</label>
+        
+        <div class="queue-item" *ngFor="let item of uploadQueueCreate; let i = index">
+          <div class="queue-thumb">
+            <img [src]="item.previewUrl" alt="Preview">
+          </div>
+          <div class="queue-input-box">
+            <label style="display: flex; align-items: center; gap: 8px; color: #fff; margin-bottom: 10px; cursor: pointer; font-size: 0.9rem;">
+              <input type="radio" name="mainPhotoGroup" [value]="i" [(ngModel)]="mainPhotoIndexCreate" style="margin: 0; cursor: pointer;">
+              Обложка
+            </label>
+            <input type="text" [(ngModel)]="item.title" placeholder="Название кадра" style="margin-bottom: 10px !important;">
+            <textarea [(ngModel)]="item.description" placeholder="Описание кадра..." rows="2"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <button 
+        class="submit-btn" 
+        [disabled]="loading() || uploadQueueCreate.length === 0" 
+        (click)="uploadBulk('create', fileInput1)">
+        <span>{{ loading() ? 'ИДЕТ ЗАГРУЗКА...' : 'СОЗДАТЬ АЛЬБОМ И ЗАГРУЗИТЬ ВСЕ' }}</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="admin-card">
+    <h2>Изменение, удаление и добавление кадров в альбом</h2>
+    
+    <div class="admin-form">
+      <div class="form-group">
+        <label class="form-label">Выберите альбом для управления</label>
+        <select [(ngModel)]="selectedAlbumId" (change)="onAlbumSelectChange()">
+          <option value="">Список альбомов</option>
+          <option *ngFor="let album of albums" [value]="album.id">{{ album.name }}</option>
+        </select>
+      </div>
+
+      <div class="form-group" *ngIf="selectedAlbumId">
+        <label class="form-label">Новое название</label>
+        <input type="text" [(ngModel)]="renameAlbumName" placeholder="Введите новое имя">
+      </div>
+
+      <div class="action-buttons-group" *ngIf="selectedAlbumId">
+        <button class="submit-btn edit-btn" (click)="renameAlbum()">Переименовать альбом</button>
+        <button class="submit-btn delete-btn" (click)="deleteAlbum()">Удалить альбом</button>
+      </div>
+
+      <div class="existing-album-upload-zone" *ngIf="selectedAlbumId" style="margin-top: 35px; padding-top: 25px; border-top: 1px solid #161616;">
+        <label class="form-label" style="color: #ffffff; font-weight: 600;">Дополнить альбом</label>
+        
+        <div class="form-group" style="margin-top: 15px;">
+          <input 
+            type="file" 
+            #fileInput2
+            accept="image/*" 
+            multiple 
+            (change)="onFilesSelected($event, 'append')">
+        </div>
+
+        <div class="upload-queue" *ngIf="uploadQueueAppend.length > 0">
+          <div class="queue-item" *ngFor="let item of uploadQueueAppend">
+            <div class="queue-thumb">
+              <img [src]="item.previewUrl" alt="Preview">
+            </div>
+            <div class="queue-input-box">
+              <input type="text" [(ngModel)]="item.title" placeholder="Название нового кадра" style="margin-bottom: 10px !important;">
+              <textarea [(ngModel)]="item.description" placeholder="Описание нового кадра..." rows="2"></textarea>
+            </div>
+          </div>
+          
+          <button 
+            class="submit-btn edit-btn" 
+            [disabled]="loading()" 
+            (click)="uploadBulk('append', fileInput2)"
+            style="margin-top: 10px !important;">
+            <span>{{ loading() ? 'ДОБАВЛЕНИЕ КАДРОВ...' : 'ЗАГРУЗИТЬ ДОПОЛНИТЕЛЬНЫЕ КАДРЫ' }}</span>
+          </button>
+        </div>
+      </div>
+      
+      <div class="album-photos-section" *ngIf="selectedAlbumId">
+        <label class="form-label" style="color: #666; margin-top: 40px; margin-bottom: 15px; display: block;">
+          Текущие кадры в альбоме (Всего: {{ albumPhotos.length }}):
+        </label>
+
+        <div class="photos-management-grid">
+          <div class="photo-manage-card" *ngFor="let photo of albumPhotos">
+            
+            <button type="button" class="photo-delete-badge" (click)="deletePhoto(photo.id)">×</button>
+            
+            <div class="main-cover-badge" *ngIf="photo.isMain">Обложка</div>
+            
+            <div class="photo-manage-thumb">
+              <img [src]="baseUrl + photo.imageUrl" alt="Photo">
+            </div>
+
+            <div class="photo-manage-inputs">
+              <input type="text" [(ngModel)]="photo.title" placeholder="Название кадра">
+              <textarea [(ngModel)]="photo.description" placeholder="Описание кадра..." rows="2"></textarea>
+                
+              <div class="photo-card-actions">
+                <button 
+                  type="button" 
+                  class="card-action-btn set-main-btn" 
+                  *ngIf="!photo.isMain" 
+                  (click)="setAsMainPhoto(photo)">
+                  Обложка
+                </button>
+
+                <button 
+                  type="button" 
+                  class="card-action-btn save-metadata-btn" 
+                  (click)="updatePhotoMetadata(photo)">
+                  Сохранить
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div *ngIf="albumPhotos.length === 0" style="text-align: center; color: #444444; font-size: 0.85rem; padding: 20px 0;">
+          В этом альбоме ещё нет фотографий.
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="admin-card">
+    <h2>Заявки на съёмку</h2>
+    <div class="feedback-list">
+      <div class="feedback-item" *ngFor="let item of feedbacks()" [ngClass]="{'unread-feedback': !item.isRead}">
+        <div class="feedback-header">
+          <div class="feedback-info">
+            <span class="unread-indicator" *ngIf="!item.isRead">Новое</span>
+            <p class="feedback-text"><strong>Имя:</strong> {{ item.name }}</p>
+            <p class="feedback-text"><strong>Контакты:</strong> {{ item.contact }}</p>
+          </div>
+          <div class="feedback-actions">
+            <button class="feedback-action-btn toggle-read-btn" (click)="toggleFeedbackRead(item)">
+              {{ item.isRead ? 'Отметить как непрочитанное' : 'Отметить как прочитанное' }}
+            </button>
+            <button class="feedback-action-btn delete-btn" (click)="deleteFeedback(item.id)">Удалить</button>
+          </div>
+        </div>
+        <p class="feedback-message">{{ item.message }}</p>
+      </div>
+      <div *ngIf="feedbacks().length === 0" style="text-align: center; padding: 20px 0;">
+        <p style="color: #444444; font-size: 0.85rem; letter-spacing: 1px; margin: 0;">Новых заявок пока нет</p>
+      </div>
+    </div>
+  </div>
+
+</div>

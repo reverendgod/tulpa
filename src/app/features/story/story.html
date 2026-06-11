@@ -1,0 +1,88 @@
+<section class="story-container">
+  
+  <div class="about-section" id="about">
+    
+    <div class="about-parallax-bg"></div>
+    
+    <div class="about-dark-overlay"></div>
+
+    <div class="about-content-wrapper">
+      
+      <div class="about-text-column">
+        <p class="about-description">
+          Почему я считаю свои фотографии больше картинами, нежели кадрами? Художник пишет картину в голове. Сначала у него рождается мысль, из этой мысли рождается идея, за идеей будущая картина получает в сознании уже примерные очертания. Фотограф по определению это документалист, его задача вовремя поймать удачный кадр. В данном случае, главный создатель — окружающий его мир. А мне больше нравится самой выступать в роли создателя, используя мир как инструмент. Мне нравится гнуть, искажать его, править. В моих работах очень много постобработки, почти каждый пейзаж очищался от человеческого мусора, кривых уродливых зданий на заднем плане, от нежелательных людей где-то среди деревьев. То, что вы видите на моих работах, существует исключительно в моей голове. Это уже не принадлежит миру, это теперь принадлежит мне, так как я приложила руку к созданию чего-то нового. (с) Ольга Венгель
+        </p>
+      </div>
+      
+      <div class="about-image-column">
+        <div class="about-img-frame">
+          <img src="/uploads/photo_Lera.jpg" alt="Lera Portrait" class="about-img">
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="contact-section" id="contacts">
+    <div class="contact-card">
+      
+      <div class="contact-form-wrapper">
+        <span class="sub-title">ОБСУДИТЬ СЪЁМКУ</span>
+        <h2>СВЯЗАТЬСЯ</h2>
+        
+        <form (submit)="onSubmit($event)" class="feedback-form">
+          <div class="form-group">
+            <input type="text" name="name" placeholder="ВАШЕ ИМЯ" required>
+          </div>
+          
+          <div class="form-group">
+            <input type="text" name="contact" placeholder="EMAIL / TELEGRAM" required>
+          </div>
+          
+          <div class="form-group">
+            <textarea name="message" placeholder="ВАША ИДЕЯ ИЛИ ПОЖЕЛАНИЯ К СЪЁМКЕ" rows="4"></textarea>
+          </div>
+          
+          <button type="submit" class="submit-btn" [disabled]="isSubmitting">
+            {{ isSubmitting ? 'ОТПРАВКА...' : 'ОТПРАВИТЬ ЗАЯВКУ' }}
+          </button>
+
+          <div *ngIf="notification.type" class="notification-message" 
+               [ngClass]="{'notification-success': notification.type === 'success', 'notification-error': notification.type === 'error'}">
+            {{ notification.text }}
+          </div>
+        </form>
+        
+        <div class="social-links-container">
+          <a href="https://t.me/morisssu" target="_blank" class="social-link">
+    <i class="fa-brands fa-telegram icon-spacing"></i>morisssu  
+  </a>
+  
+  <a href="https://vk.com/carpe_tempore" target="_blank" class="social-link">
+    <i class="fa-brands fa-vk icon-spacing"></i>тульпа смотрит
+  </a>
+  
+  <a href="https://www.instagram.com/tulpa.photo" target="_blank" class="social-link">
+    <i class="fa-brands fa-instagram icon-spacing"></i>tulpa.photo
+  </a>
+  
+  <a href="mailto:morceaurose@yandex.ru" class="social-link">
+    <i class="fa-regular fa-envelope icon-spacing"></i>email
+  </a>
+</div>
+      </div>
+      
+      <div class="contact-image-wrapper">
+        <img src="/uploads/gothic_bg.jpg" alt="Gothic Decor" class="contact-decor-img">
+        <div class="contact-image-overlay">
+          <div class="overlay-text">
+            <h3>ИСКУССТВО<br>В КАЖДОМ<br>КАДРЕ</h3>
+            <p>Воплотим вашу идею в реальность</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</section>

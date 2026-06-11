@@ -1,1 +1,32 @@
-/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Montserrat:wght@200;300;400&display=swap');
+
+body, html {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  background-color: #000000;
+  color: #f5f5f5;
+  font-family: 'Montserrat', sans-serif;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%; /* Предотвращает зум шрифтов на iOS */
+}
+
+/* ГЛОБАЛЬНЫЙ ДАРК-ЭФФЕКТ №2: Эффект шума/киноленты */
+body::after {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  /* Статический PNG-шум вместо тяжелого SVG. Устраняет бандинг (линии) и фризы */
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyBAMAAADsEZWCAAAAGFBMVEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMcZzAAAAACHRSTlMzMzMzMzMzM8w2/78AAABRSURBVDjLxdGxCQAgEAPRAzH/Vl0hPk1AIfcnXOBfSjAjt2pLw01ZmpvT5nS7uWkOTpvT5uY03ExZmqE03JSluTltTrebm+bgtDltbk7DzZSlGf7iP2B5sXWCAAAAAElFTkSuQmCC");
+  background-repeat: repeat;
+  opacity: 0.035; /* Увеличено для дизеринга (скрывает линии блюра) */
+  z-index: 104;
+  pointer-events: none;
+  /* Выносим в отдельный слой для GPU-ускорения, чтобы не тормозило при наведении на альбомы */
+  transform: translateZ(0);
+  will-change: transform;
+}

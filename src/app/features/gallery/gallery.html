@@ -1,0 +1,48 @@
+<div class="gallery-grid-container">
+  <div class="pub-gal-mosaic-grid">
+    
+  <div class="pub-gal-top-floor">
+    <div #revealCard class="pub-gal-banner-card horizontal-layout" (click)="openCategory('art-shoots')">
+      <div class="pub-gal-banner-link">
+        <div class="pub-gal-banner-viewport">
+          
+          <img src="/uploads/art.jpg" alt="Художественная съёмка" style="object-position: 50% 75%;">
+          
+          <div class="pub-gal-btn-hover-badge">В альбом</div>
+        </div>
+        <div class="pub-gal-banner-meta-mask">
+          <h2 class="pub-gal-main-title">Художественная съёмка</h2>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    <div class="pub-gal-bottom-floor">
+      
+      <div #revealCard class="pub-gal-banner-card vertical-layout" (click)="openCategory('reportage')">
+        <div class="pub-gal-banner-link">
+          <div class="pub-gal-banner-viewport">
+            <img src="/uploads/reportage.jpg" alt="Репортажная съёмка" style="object-position: 50% 75%;">
+            <div class="pub-gal-btn-hover-badge">В альбом</div>
+          </div>
+          <div class="pub-gal-banner-meta-mask">
+            <h2 class="pub-gal-main-title">Репортажная съёмка</h2>
+          </div>
+        </div>
+      </div>
+
+      <div #revealCard class="pub-gal-banner-card vertical-layout" (click)="openCategory('commercial')">
+        <div class="pub-gal-banner-link">
+          <div class="pub-gal-banner-viewport">
+            <img src="/uploads/commercial.jpg" alt="Предметная съёмка" style="object-position: 50% 40%;">
+            <div class="pub-gal-btn-hover-badge">В альбом</div>
+          </div>
+          <div class="pub-gal-banner-meta-mask">
+            <h2 class="pub-gal-main-title">Предметная съёмка</h2>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

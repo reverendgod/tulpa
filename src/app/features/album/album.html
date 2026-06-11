@@ -1,0 +1,81 @@
+<div class="album-page-container">
+  
+  <div *ngIf="albumPhotos.length > 0" 
+       class="dynamic-blur-background"
+       [style.backgroundImage]="'url(' + albumPhotos[currentPhotoIndex].imageUrl + ')'">
+  </div>
+  
+  <ng-container *ngIf="albumPhotos.length > 0">
+    <button class="slider-btn prev-btn" (click)="prevPhoto($event)">‹</button>
+    <button class="slider-btn next-btn" (click)="nextPhoto($event)">›</button>
+  </ng-container>
+
+  <header class="album-header">
+    <div class="back-link" (click)="goBackToCategory()">К альбомам</div>
+  </header>
+
+  <ng-container *ngIf="isLoading; else contentArea">
+    <div class="skeleton-container">
+      <div class="skeleton-viewport">
+        <div class="skeleton-stage skeleton-effect"></div>
+        <div class="skeleton-sidebar skeleton-effect"></div>
+      </div>
+      <div class="photo-meta-bar">
+         <span class="photo-counter" style="opacity: 0.5;">Загрузка...</span>
+      </div>
+      <div class="skeleton-thumbnails">
+        <div class="skeleton-thumb skeleton-effect"></div>
+        <div class="skeleton-thumb skeleton-effect"></div>
+        <div class="skeleton-thumb skeleton-effect"></div>
+        <div class="skeleton-thumb skeleton-effect"></div>
+        <div class="skeleton-thumb skeleton-effect"></div>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-template #contentArea>
+    <div class="album-viewer-layout" *ngIf="albumPhotos.length > 0; else emptyAlbum">
+      
+      <div class="main-photo-viewport">
+        <div class="photo-stage">
+          <img [src]="albumPhotos[currentPhotoIndex].imageUrl" 
+               [alt]="albumPhotos[currentPhotoIndex].title || 'Фото'">
+        </div>
+
+        <div class="photo-meta-sidebar" *ngIf="(albumPhotos[currentPhotoIndex].title && albumPhotos[currentPhotoIndex].title !== 'Без названия') || (albumPhotos[currentPhotoIndex].description && albumPhotos[currentPhotoIndex].description !== 'Автозагрузка сканером')">
+          <h3 class="photo-title" *ngIf="albumPhotos[currentPhotoIndex].title && albumPhotos[currentPhotoIndex].title !== 'Без названия'">
+            {{ albumPhotos[currentPhotoIndex].title }}
+          </h3>
+          <p class="photo-description" *ngIf="albumPhotos[currentPhotoIndex].description && albumPhotos[currentPhotoIndex].description !== 'Автозагрузка сканером'">
+            {{ albumPhotos[currentPhotoIndex].description }}
+          </p>
+        </div>
+      </div>
+
+      <div class="photo-meta-bar">
+        <span class="photo-counter">{{ currentPhotoIndex + 1 }} / {{ albumPhotos.length }}</span>
+      </div>
+
+      <div class="thumbnails-container">
+        <button class="thumb-nav-btn thumb-prev-btn" (click)="scrollThumbnails(-1, thumbnailsTrack)">‹</button>
+        <div class="thumbnails-track" #thumbnailsTrack (wheel)="onWheelScroll($event, thumbnailsTrack)">
+          <div class="thumb-wrapper" 
+               *ngFor="let photo of albumPhotos; let i = index; trackBy: trackByPhotoId" 
+               [class.active]="i === currentPhotoIndex"
+               (click)="setPhoto(i)">
+            <img [src]="photo.imageUrl" alt="Миниатюра">
+          </div>
+        </div>
+        <button class="thumb-nav-btn thumb-next-btn" (click)="scrollThumbnails(1, thumbnailsTrack)">›</button>
+      </div>
+
+    </div>
+  </ng-template>
+
+  <ng-template #emptyAlbum>
+    <div class="no-photos-message">
+      <p>АЛЬБОМ ПУСТ ИЛИ ИДЕТ СИНХРОНИЗАЦИЯ</p>
+    </div>
+  </ng-template>
+
+</div>
