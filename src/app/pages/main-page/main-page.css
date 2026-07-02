@@ -49,7 +49,7 @@
     height: 1px;
     background-color: #fff;
     transform: scaleX(0);
-    transform-origin: center;
+    transform-origin: left;
     transition: transform 0.4s cubic-bezier(0.19, 1, 0.22, 1);
 }
 

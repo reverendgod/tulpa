@@ -11,12 +11,12 @@
     
     <div class="album-panel-card" *ngFor="let set of sets" (click)="openSet(set.id)">
       <div class="album-viewport">
-        <img *ngIf="set.coverUrl" [src]="set.coverUrl" [alt]="set.displayName">
+        <img *ngIf="set.coverUrl && set.coverUrl.includes('/uploads')" [src]="set.coverUrl" [alt]="set.displayName">
         <div class="album-hover-overlay">
           <span class="view-album-btn">ОТКРЫТЬ СЕТ</span>
         </div>
       </div>
-      <div class="album-meta">
+      <div class="album-meta" *ngIf="set.displayName">
         <h3 class="album-title">{{ set.displayName }}</h3>
       </div>
     </div>

@@ -459,3 +459,31 @@ h2 {
     color: #ffffff !important;
     margin: 0 !important;
 }
+/* =======================================================
+   7. СТИЛИ ДЛЯ ПЛАВНОГО DRAG AND DROP (ANGULAR CDK)
+   ======================================================= */
+
+/* Класс, который вешается на карточку кадра в момент, когда её зажали мышкой */
+.cdk-drag-preview {
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.8) !important;
+    border-color: #c39b62 !important; /* Подсвечиваем перетаскиваемый кадр золотом */
+    background: #121212 !important;
+    border-radius: 2px;
+}
+
+/* Элемент-placeholder (пустое место, которое показывает, куда упадет кадр) */
+.cdk-drag-placeholder {
+    opacity: 0.2 !important;
+    border: 2px dashed #444444 !important;
+    background: transparent !important;
+}
+
+/* Анимация плавного сдвига остальных карточек, когда мы ведем над ними кадр */
+.cdk-drop-list-dragging .photo-manage-card {
+    transition: transform 0.25s cubic-bezier(0, 0, 0.2, 1);
+}
+
+/* Класс анимации возврата кадра, если мы отпустили его не в то место */
+.cdk-drag-animating {
+    transition: transform 0.25s cubic-bezier(0, 0, 0.2, 1);
+}

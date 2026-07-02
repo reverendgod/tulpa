@@ -166,3 +166,35 @@
     text-align: center;
     margin-top: 50px;
 }
+
+@media (max-width: 768px) {
+    .category-page-container {
+        padding: 80px 15px 40px 15px;
+    }
+
+    .category-header {
+        margin-bottom: 40px;
+    }
+
+    .category-page-title {
+        font-size: 2.2rem; /* Уменьшаем шрифт заголовка */
+        letter-spacing: 3px;
+        word-break: break-word; /* Разрешаем перенос длинных слов */
+        text-align: center;
+    }
+
+    .albums-panel-grid {
+        /* Делаем сетку из 3 колонок на мобильных, уменьшаем отступы */
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px 15px;
+    }
+
+    .album-meta {
+        padding: 15px 0 0 0;
+    }
+
+    .album-title {
+        font-size: 0.6rem;
+        letter-spacing: 2px;
+    }
+}

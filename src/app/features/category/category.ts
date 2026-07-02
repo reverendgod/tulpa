@@ -1,17 +1,17 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core'; // <-- 1. Добавили ChangeDetectorRef
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 
-interface PhotoItem {
+interface AlbumItem {
   id: number;
-  imageUrl: string;
+  name: string;
+  slug: string;
   category: string;
-  isMain: boolean;
 }
 
 interface SetItem {
-  id: string;
+  id: number;       // Теперь ID числовой
   displayName: string;
   coverUrl: string;
 }
@@ -32,7 +32,7 @@ export class CategoryComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private http: HttpClient,
-    private cdr: ChangeDetectorRef // <-- 2. Внедряем в конструктор
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -41,60 +41,29 @@ export class CategoryComponent implements OnInit {
       this.loadCategorySets(this.mainCategoryName);
     }
   }
+  
+loadCategorySets(mainCat: string): void {
+  const targetCat = mainCat.toLowerCase().trim();
 
- loadCategorySets(mainCat: string): void {
-    const targetCat = mainCat.toLowerCase().trim();
+  this.http.get<any[]>(`${this.baseUrl}/photos/albums?category=${targetCat}`)
+    .subscribe({
+      next: (albums) => {
+        this.sets = albums.map(album => {
+          return {
+            id: album.id,
+            displayName: album.name.toUpperCase(), 
+            coverUrl: album.coverUrl // <-- ИСПРАВЛЕНО: Просто берем готовую обложку, переданную сервером!
+          };
+        });
+        this.cdr.detectChanges();
+      },
+      error: (err) => console.error('Ошибка загрузки альбомов:', err)
+    });
+}
 
-    this.http.get<any>(`${this.baseUrl}/photos?pageSize=500`)
-      .subscribe({
-        next: (response) => {
-          let photosArray: PhotoItem[] = [];
-          if (Array.isArray(response)) {
-            photosArray = response;
-          } else if (response && Array.isArray(response.items)) {
-            photosArray = response.items;
-          }
-
-          // ДИНАМИЧЕСКИЙ ОТБОР СЕТОВ (Исключаем старый плоский хлам)
-          const filtered = photosArray.filter(p => {
-            if (!p.category) return false;
-            const dbCat = p.category.toLowerCase().trim();
-            
-            // Забираем только те сеты, которые начинаются с текущего раздела 
-            // И строго содержат дефис (гарантия того, что это вложенная папка-сет, а не общая категория)
-            return dbCat.startsWith(targetCat) && dbCat.includes('-');
-          });
-
-          // Собираем уникальные категории/сеты
-          const uniqueSetIds = Array.from(new Set(filtered.map(p => p.category)));
-
-          // Группируем папки автоматически
-          this.sets = uniqueSetIds.map(setId => {
-            const setPhotos = filtered.filter(p => p.category === setId);
-            const cover = setPhotos.find(p => p.isMain) || setPhotos[0];
-            
-            // Автоматически вырезаем технические префиксы папок (art-shoots-лиза -> ЛИЗА)
-            const dName = setId
-              .replace(new RegExp('^' + mainCat + '-', 'i'), '')
-              .replace(new RegExp('^' + mainCat, 'i'), '')
-              .replace(/-/g, ' ')
-              .trim();
-
-            return {
-              id: setId, 
-              displayName: dName.toUpperCase(), 
-              coverUrl: cover ? cover.imageUrl : ''
-            };
-          });
-
-          this.cdr.detectChanges();
-        },
-        error: (err) => console.error('Ошибка загрузки альбомов:', err)
-      });
-  }
-
-  openSet(setId: string): void {
-    this.router.navigate(['/album', setId]);
+  openSet(albumId: number): void {
+    // Передаем числовой ID в роутер
+    this.router.navigate(['/album', albumId]);
   }
 
   goBackToGallery(): void {

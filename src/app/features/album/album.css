@@ -179,13 +179,21 @@
   .album-header { flex-direction: column; align-items: flex-start; justify-content: flex-start; }
   .back-link { position: relative; margin-bottom: 10px; left: auto; padding: 10px 20px; font-size: 0.65rem; }
   .album-page-title { text-align: left; }
-  .main-photo-viewport { height: auto; min-height: 50vh; width: 100%; flex-direction: column; align-items: center; }
-  .photo-stage { height: 50vh; min-height: 300px; width: 100%; margin-bottom: 15px; padding-right: 0; }
-  .slider-btn { position: fixed; font-size: 3rem; top: 35vh; }
-  .prev-btn { left: 5px; } .next-btn { right: 5px; }
-  .thumbnails-track { max-width: 100%; margin-top: 15px; }
-  .thumb-wrapper { width: 80px; height: 55px; }
   
+  /* --- ИСПРАВЛЕНИЯ ДЛЯ СТАБИЛИЗАЦИИ --- */
+  .main-photo-viewport {
+    height: 55vh; /* Фиксированная высота, чтобы избежать прыжков */
+    min-height: 300px;
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+  }
+  .photo-stage {
+    height: 100%; /* Растягиваем на всю высоту родителя */
+    width: 100%;
+    margin-bottom: 15px;
+    padding-right: 0;
+  }
   .photo-meta-sidebar {
     width: 100%;
     margin-left: 0;
@@ -194,9 +202,20 @@
     border-left: none;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
     align-items: center;
-  }
-  .photo-meta-sidebar .photo-title {
+    min-height: 100px; /* Резервируем место, чтобы избежать прыжков при скрытии/показе контента */
+    display: flex; /* Добавляем flex для центрирования контента, если он есть */
+    flex-direction: column;
+    justify-content: center;
     text-align: center;
+  }
+  /* --- КОНЕЦ ИСПРАВЛЕНИЙ --- */
+
+  .slider-btn { position: fixed; font-size: 3rem; top: 35vh; }
+  .prev-btn { left: 5px; } .next-btn { right: 5px; }
+  .thumbnails-track { max-width: 100%; margin-top: 15px; }
+  .thumb-wrapper { width: 80px; height: 55px; }
+  
+  .photo-meta-sidebar .photo-title {
     font-size: 1.5rem;
   }
   .photo-meta-sidebar .photo-description {

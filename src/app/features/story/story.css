@@ -1,13 +1,13 @@
 .story-container {
     position: relative;
     z-index: 2;
-    background: transparent !important; 
-    padding-bottom: 120px; 
+    background: transparent !important;
+    padding-bottom: 7.5rem; /* 120px */
     background-image: linear-gradient(to bottom, transparent 60%, #050505 100%);
 }
 
 /* =======================================================
-   БЛОК "ОБО МНЕ" (ИСПРАВЛЕНЫ ФОНЫ И ОБРЕЗКА)
+   БЛОК "ОБО МНЕ"
    ======================================================= */
 .about-section {
     position: relative;
@@ -15,52 +15,36 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 120px 40px;
-    
-    /* Убираем жесткий черный цвет, чтобы сквозь блок было видно маску фона */
-    background: transparent !important; 
+    padding: 7.5rem 2.5rem; /* 120px 40px */
+    background: transparent !important;
     box-sizing: border-box;
-    overflow: visible; /* Позволяет маске плавно сходить на нет */
+    overflow: visible;
 }
 
-/* СЛОЙ 1: Ангел жестко на заднем плане (БЕЗ FIXED И БЕЗ ОБРЫВА) */
 .about-parallax-bg {
-    position: absolute; /* Привязан строго к границам блока "Обо мне" */
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
     background-image: url('/uploads/gothic_bg.jpg');
     background-size: cover;
     background-position: center top;
     background-repeat: no-repeat;
-    
-    z-index: 1; 
+    z-index: 1;
 }
 
-/* СЛОЙ 2: Плотный градиент-затемнение поверх ангела */
 .about-dark-overlay {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(to bottom, 
-        #000000 0%, 
-        rgba(0, 0, 0, 0.75) 20%, 
-        rgba(0, 0, 0, 0.75) 80%, 
-        #050505 100%);
-    z-index: 2; 
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(to bottom, #000000 0%, rgba(0,0,0,0.75) 20%, rgba(0,0,0,0.75) 80%, #050505 100%);
+    z-index: 2;
 }
 
-/* СЛОЙ 3: Весь контент — ВЫТАЛКИВАЕМ НАВЕРХ */
 .about-content-wrapper {
     position: relative;
-    z-index: 10; 
+    z-index: 10;
     display: flex;
     width: 100%;
     max-width: 1200px;
-    gap: 80px;
+    gap: 5rem; /* 80px */
     align-items: center;
 }
 
@@ -70,28 +54,27 @@
 
 .about-text-column h2 {
     font-family: 'Cormorant Garamond', serif;
-    font-size: 3.8rem; 
+    font-size: 3.8rem;
     font-weight: 400;
-    font-style: italic; 
-    letter-spacing: 4px;
+    font-style: italic;
+    letter-spacing: 0.25rem; /* 4px */
     text-transform: uppercase;
-    margin: 0 0 35px 0;
+    margin: 0 0 2.2rem 0; /* 35px */
     color: #ffffff;
-    text-shadow: 0 2px 10px rgba(0,0,0,0.9);
+    text-shadow: 0 0.125rem 0.625rem rgba(0,0,0,0.9); /* 2px 10px */
 }
 
 .about-description {
     font-family: 'Inter', sans-serif;
     font-size: 0.95rem;
-    line-height: 1.9; 
-    color: #a0a0a0; 
+    line-height: 1.9;
+    color: #a0a0a0;
     font-weight: 300;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.031rem; /* 0.5px */
     margin: 0;
     text-align: justify;
 }
 
-/* Правая колонка с фоткой */
 .about-image-column {
     flex: 0.9;
     display: flex;
@@ -101,12 +84,12 @@
 .about-img-frame {
     width: 100%;
     max-width: 420px;
-    height: 560px;
+    height: 560px; /* Будет переопределено на мобильных */
     background: #050505;
     border: 1px solid #1c1c1c;
-    padding: 15px;
-    border-radius: 2px;
-    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.9);
+    padding: 1rem; /* 16px */
+    border-radius: 0.125rem; /* 2px */
+    box-shadow: 0 1.875rem 3.75rem rgba(0, 0, 0, 0.9); /* 30px 60px */
 }
 
 .about-img {
@@ -124,8 +107,11 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 140px 40px;
-    background: radial-gradient(circle at center, #121214 0%, #050505 100%);
+    padding: 8.75rem 2.5rem; /* 140px 40px */
+    background-image: url('/story_bg.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
     box-sizing: border-box;
     position: relative;
     z-index: 15;
@@ -139,129 +125,103 @@
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 20px;
+    border-radius: 1.25rem; /* 20px */
     overflow: hidden;
-    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8), inset 0 0 20px rgba(255, 255, 255, 0.02);
+    box-shadow: 0 1.875rem 3.75rem rgba(0,0,0,0.8), inset 0 0 1.25rem rgba(255,255,255,0.02);
     transition: all 0.3s ease-in-out;
 }
 
 .contact-card:hover {
-    box-shadow: 0 40px 80px rgba(0, 0, 0, 0.9), inset 0 0 30px rgba(255, 255, 255, 0.04);
+    box-shadow: 0 2.5rem 5rem rgba(0,0,0,0.9), inset 0 0 1.875rem rgba(255,255,255,0.04);
 }
 
 .contact-form-wrapper {
     flex: 1.1;
-    padding: 60px;
+    padding: 3.75rem; /* 60px */
 }
 
 .sub-title {
     font-size: 0.75rem;
-    letter-spacing: 3px;
+    letter-spacing: 0.1875rem; /* 3px */
     color: #888888;
     display: block;
-    margin-bottom: 8px;
+    margin-bottom: 0.5rem; /* 8px */
     text-transform: uppercase;
 }
 
 .contact-form-wrapper h2 {
     font-size: 2.2rem;
-    letter-spacing: 4px;
-    margin: 0 0 35px 0;
+    letter-spacing: 0.25rem; /* 4px */
+    margin: 0 0 2.2rem 0; /* 35px */
     color: #ffffff;
 }
 
 .form-group {
-    margin-bottom: 24px;
+    margin-bottom: 1.5rem; /* 24px */
 }
 
-.form-group input, 
+.form-group input,
 .form-group textarea {
     width: 100%;
-    padding: 18px;
+    padding: 1.125rem; /* 18px */
     background: rgba(0, 0, 0, 0.3);
     border: 1px solid rgba(255, 255, 255, 0.1);
     color: #ffffff;
     font-size: 0.9rem;
-    letter-spacing: 1px;
-    border-radius: 12px;
+    letter-spacing: 0.0625rem; /* 1px */
+    border-radius: 0.75rem; /* 12px */
     box-sizing: border-box;
     transition: all 0.3s ease-in-out;
     resize: none;
 }
 
-.form-group input:focus, 
+.form-group input:focus,
 .form-group textarea:focus {
     border-color: #6366F1;
     background: rgba(0, 0, 0, 0.5);
     outline: none;
-    box-shadow: 0 0 15px rgba(99, 102, 241, 0.2);
+    box-shadow: 0 0 1rem rgba(99, 102, 241, 0.2);
 }
 
 .submit-btn {
     width: 100%;
-    padding: 16px;
+    padding: 1rem; /* 16px */
     background: #ffffff;
     color: #000000;
     border: none;
     font-weight: bold;
     font-size: 0.85rem;
-    letter-spacing: 2px;
+    letter-spacing: 0.125rem; /* 2px */
     cursor: pointer;
-    border-radius: 2px;
+    border-radius: 0.125rem; /* 2px */
     transition: background 0.3s ease;
 }
-
-.submit-btn:hover {
-    background: #cccccc;
-}
-
-.submit-btn:disabled {
-    background: #555555;
-    color: #999999;
-    cursor: not-allowed;
-}
+.submit-btn:hover { background: #cccccc; }
+.submit-btn:disabled { background: #555555; color: #999999; cursor: not-allowed; }
 
 .notification-message {
-    padding: 16px;
-    border-radius: 12px;
-    margin-top: 20px;
+    padding: 1rem;
+    border-radius: 0.75rem;
+    margin-top: 1.25rem;
     font-size: 0.85rem;
-    letter-spacing: 1px;
+    letter-spacing: 0.0625rem;
     text-align: center;
     animation: fadeIn 0.4s ease-in-out;
     backdrop-filter: blur(5px);
 }
-
-.notification-success {
-    background: rgba(0, 255, 102, 0.1);
-    border: 1px solid rgba(0, 255, 102, 0.3);
-    color: #00ff66;
-}
-
-.notification-error {
-    background: rgba(255, 50, 50, 0.1);
-    border: 1px solid rgba(255, 50, 50, 0.3);
-    color: #ff4444;
-}
+.notification-success { background: rgba(0, 255, 102, 0.1); border: 1px solid rgba(0, 255, 102, 0.3); color: #00ff66; }
+.notification-error { background: rgba(255, 50, 50, 0.1); border: 1px solid rgba(255, 50, 50, 0.3); color: #ff4444; }
 
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-10px); }
+    from { opacity: 0; transform: translateY(-0.625rem); }
     to { opacity: 1; transform: translateY(0); }
 }
 
-.social-links-under-form {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-    margin-top: 30px;
-    justify-content: space-between;
-}
-
 .social-links-container {
-    margin-top: 40px;
+    margin-top: 2.5rem; /* 40px */
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 20px 30px;
+    gap: 1.25rem 1.875rem; /* 20px 30px */
     width: 100%;
     box-sizing: border-box;
 }
@@ -271,26 +231,19 @@
     text-decoration: none !important;
     font-family: 'Inter', sans-serif;
     font-size: 0.9rem;
-    letter-spacing: 1px;
+    letter-spacing: 0.0625rem; /* 1px */
     color: #888888;
     text-transform: lowercase;
     transition: all 0.3s ease-in-out;
 }
 .icon-spacing {
-    margin-right: 10px;
+    margin-right: 0.625rem; /* 10px */
     font-size: 1.1rem;
     color: #666666;
     transition: all 0.3s ease-in-out;
 }
-
-.social-link:hover {
-    color: #ffffff;
-    transform: translateY(-2px);
-}
-.social-link:hover .icon-spacing {
-    color: #6366F1;
-    transform: scale(1.1);
-}
+.social-link:hover { color: #ffffff; transform: translateY(-0.125rem); }
+.social-link:hover .icon-spacing { color: #6366F1; transform: scale(1.1); }
 
 .contact-image-wrapper {
     flex: 0.9;
@@ -298,7 +251,6 @@
     position: relative;
     overflow: hidden;
 }
-
 .contact-decor-img {
     width: 100%;
     height: 100%;
@@ -307,106 +259,126 @@
     opacity: 0.6;
     transition: all 0.7s ease-in-out;
 }
-
-.contact-card:hover .contact-decor-img {
-    transform: scale(1.03);
-    opacity: 0.7;
-}
-
+.contact-card:hover .contact-decor-img { transform: scale(1.03); opacity: 0.7; }
 .contact-image-overlay {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    top: 0; left: 0; width: 100%; height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 40px;
+    padding: 2.5rem; /* 40px */
     box-sizing: border-box;
     text-align: center;
 }
-
 .overlay-text h3 {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 2.5rem;
+    font-family: 'Inter', sans-serif;
+    font-size: 1.2rem;
     font-weight: 400;
-    font-style: italic;
     color: #ffffff;
-    letter-spacing: 4px;
+    letter-spacing: 0.25rem; /* 4px */
     line-height: 1.2;
-    margin: 0 0 15px 0;
-    text-shadow: 0 5px 15px rgba(0,0,0,0.8);
+    margin: 0 0 1rem 0; /* 16px */
+    text-shadow: 0 0.3125rem 1rem rgba(0,0,0,0.8);
 }
-
 .overlay-text p {
     font-family: 'Inter', sans-serif;
     font-size: 0.85rem;
     color: #a0a0a0;
-    letter-spacing: 1px;
+    letter-spacing: 0.0625rem; /* 1px */
     margin: 0;
 }
 
-@media (max-width: 900px) {
-    .about-section {
-        padding: 60px 20px;
+/* =======================================================
+   АДАПТИВНАЯ ВЕРСТКА (MOBILE-FIRST)
+   ======================================================= */
+
+/* Планшеты (Portrait) и большие смартфоны */
+@media (max-width: 768px) {
+    .about-section, .contact-section {
+        padding: 5rem 1.25rem; /* 80px 20px */
         min-height: auto;
     }
-    .about-content-wrapper {
-        flex-direction: column;
-        gap: 40px;
+
+    .about-content-wrapper, .contact-card {
+        flex-direction: column; /* ПРАВИЛО 2: Всегда колонка */
+        gap: 2.5rem; /* 40px */
     }
-    .about-text-column, .about-image-column {
-        flex: none;
+
+    .about-text-column, .about-image-column, .contact-form-wrapper, .contact-image-wrapper {
+        flex: none; /* Убираем flex-grow/shrink */
         width: 100%;
     }
+
+    .about-text-column h2 {
+        font-size: 2.5rem; /* ~40px */
+    }
+
+    .about-description {
+        font-size: 0.9rem;
+        line-height: 1.8;
+    }
+
+    /* ПРАВИЛО 3: Фиксация пропорций изображений */
     .about-img-frame {
         max-width: 100%;
-        height: auto;
+        height: auto; /* Снимаем жесткую высоту */
+        aspect-ratio: 3 / 4; /* Сохраняем пропорции как у десктопной версии */
+        padding: 0.75rem; /* 12px */
     }
-    
-    .contact-section {
-        padding-top: 100px;
-        padding-bottom: 60px;
-        padding-left: 20px;
-        padding-right: 20px;
-        min-height: auto;
-    }
+
     .contact-card {
-        flex-direction: column;
-        border-radius: 16px;
+        border-radius: 1rem; /* 16px */
     }
+
     .contact-form-wrapper {
-        padding: 40px 20px;
-        flex: none;
-        width: 100%;
+        padding: 2.5rem 1.25rem; /* 40px 20px */
     }
+
     .contact-form-wrapper h2 {
-        font-size: 1.8rem;
-        margin-bottom: 25px;
+        font-size: 2rem; /* ~32px */
         text-align: center;
     }
     .sub-title {
         text-align: center;
     }
-    .form-group input, 
-    .form-group textarea {
-        width: 100%;
-        box-sizing: border-box;
-        font-size: 16px;
-    }
-    .submit-btn {
-        width: 100%;
-        padding: 16px;
-        font-size: 0.85rem;
-    }
+
     .contact-image-wrapper {
-        flex: none;
-        width: 100%;
-        min-height: 300px;
+        min-height: 350px;
+        height: 50vh; /* Привязка к высоте экрана */
     }
+
     .social-links-container {
         grid-template-columns: 1fr;
+        gap: 1.25rem; /* 20px */
+    }
+}
+
+/* Стандартные смартфоны и маленькие экраны (e.g., iPhone SE) */
+@media (max-width: 480px) {
+    .about-section, .contact-section {
+        padding: 4rem 1rem; /* 64px 16px */
+    }
+
+    .about-text-column h2 {
+        font-size: 2rem; /* ~32px */
+    }
+
+    .about-description {
+        font-size: 0.85rem;
+    }
+
+    .contact-form-wrapper h2 {
+        font-size: 1.8rem; /* ~29px */
+    }
+
+    /* ПРАВИЛО 4: Поля ввода на всю ширину */
+    .form-group input, .form-group textarea {
+        font-size: 1rem; /* 16px - стандарт для мобильных, чтобы не было автозума */
+        padding: 1.125rem; /* 18px */
+    }
+
+    .contact-image-wrapper {
+        min-height: 300px;
     }
 }

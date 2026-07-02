@@ -15,10 +15,29 @@ export class StoryComponent {
 
   isSubmitting = false;
   notification: { type: 'success' | 'error' | null, text: string } = { type: null, text: '' };
+  private lastSubmissionTime: number | null = null;
+  private readonly submissionCooldown = 5 * 60 * 1000; // 5 minutes
+
+  constructor() {
+    const lastSubmission = localStorage.getItem('lastSubmissionTime');
+    if (lastSubmission) {
+      this.lastSubmissionTime = +lastSubmission;
+    }
+  }
 
   // ИСПРАВЛЕНО: Теперь метод находится СТРОГО внутри класса StoryComponent
- onSubmit(event: Event) {
+  onSubmit(event: Event) {
     event.preventDefault();
+
+    if (this.isSubmitting) {
+      return;
+    }
+
+    if (this.lastSubmissionTime && (Date.now() - this.lastSubmissionTime < this.submissionCooldown)) {
+      const remainingTime = Math.ceil((this.submissionCooldown - (Date.now() - this.lastSubmissionTime)) / 1000 / 60);
+      this.showNotification('error', `Вы можете отправить следующую заявку через ${remainingTime} минут.`);
+      return;
+    }
     
     const form = event.target as HTMLFormElement;
     const formData = new FormData(form);
@@ -38,27 +57,35 @@ export class StoryComponent {
     }
 
     this.isSubmitting = true;
-    this.notification.type = null;
+    this.showNotification('success', 'Отправка...'); // Neutral 'sending' message
 
     // ИСПРАВЛЕНО: передаем напрямую feedbackData, а не payload
     this.dataService.sendFeedback(feedbackData as any).subscribe({
       next: (res: any) => {
+        this.isSubmitting = false;
+        this.lastSubmissionTime = Date.now();
+        localStorage.setItem('lastSubmissionTime', this.lastSubmissionTime.toString());
         this.showNotification('success', 'Заявка успешно отправлена! Я свяжусь с вами в ближайшее время.');
         form.reset();
-        this.isSubmitting = false;
       },
       error: (err: any) => {
         console.error('Не удалось отправить заявку:', err);
-        this.showNotification('error', 'Ошибка отправки! Попробуйте позже.');
         this.isSubmitting = false;
+        this.showNotification('error', 'Ошибка при отправке. Пожалуйста, попробуйте позже или свяжитесь со мной другим способом.');
       }
     });
   }
 
   showNotification(type: 'success' | 'error', text: string) {
     this.notification = { type, text };
+
+    // Do not auto-clear the 'Sending...' message
+    if (text === 'Отправка...') {
+      return;
+    }
+
     setTimeout(() => {
       this.notification = { type: null, text: '' };
-    }, 5000); // Уведомление исчезнет через 5 секунд
+    }, 7000); // Notification will disappear after 7 seconds
   }
 }

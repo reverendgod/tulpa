@@ -8,7 +8,7 @@ interface PhotoItem {
   title: string;
   description: string;
   imageUrl: string;
-  category: string;
+  albumId: number;    // Заменили category на albumId
   isMain: boolean;
 }
 
@@ -22,7 +22,8 @@ interface PhotoItem {
 })
 export class AlbumComponent implements OnInit {
   readonly baseUrl = '/api';
-  setId: string = '';
+  albumId: number = 0; // Теперь это числовой ID
+  albumTitle: string = 'АЛЬБОМ';
   albumPhotos: PhotoItem[] = [];
   currentPhotoIndex: number = 0;
   isLoading: boolean = true;
@@ -35,32 +36,25 @@ export class AlbumComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const rawId = this.route.snapshot.paramMap.get('id') || '';
-    this.setId = decodeURIComponent(rawId).trim();
+    const rawId = this.route.snapshot.paramMap.get('id') || '0';
+    this.albumId = parseInt(rawId, 10);
     
-    if (this.setId) {
-      this.loadAlbumPhotos(this.setId);
+    if (this.albumId) {
+      this.loadAlbumPhotos(this.albumId);
     }
   }
 
-  loadAlbumPhotos(setId: string): void {
+  loadAlbumPhotos(id: number): void {
     this.isLoading = true;
-    this.http.get<any>(`${this.baseUrl}/photos?pageSize=100`)
+    this.albumPhotos = [];
+
+    // Запрашиваем у сервера фотографии строго по albumId
+    this.http.get<PhotoItem[]>(`${this.baseUrl}/photos?albumId=${id}&pageSize=200`)
       .subscribe({
         next: (response) => {
-          let photosArray: PhotoItem[] = [];
-          if (Array.isArray(response)) {
-            photosArray = response;
-          } else if (response && Array.isArray(response.items)) {
-            photosArray = response.items;
-          }
+          let photosArray: PhotoItem[] = Array.isArray(response) ? response : (response as any).items || [];
 
-          const targetId = setId.toLowerCase().trim();
-
-          this.albumPhotos = photosArray.filter(p => {
-            if (!p.category) return false;
-            return p.category.toLowerCase().trim() === targetId;
-          }).map(p => {
+          this.albumPhotos = photosArray.map(p => {
             if (p.description && p.description.includes('Автозагрузка сканером')) {
               return { ...p, description: p.description.replace(/Автозагрузка сканером/gi, '').trim() };
             }
@@ -69,6 +63,9 @@ export class AlbumComponent implements OnInit {
 
           this.currentPhotoIndex = 0;
           this.isLoading = false;
+          
+          // Получаем имя альбома для заглавия страницы
+          this.getAlbumMetadata(id);
           this.preloadAdjacentImages();
           this.cdr.detectChanges();
         },
@@ -78,6 +75,16 @@ export class AlbumComponent implements OnInit {
           this.cdr.detectChanges();
         }
       });
+  }
+
+  private getAlbumMetadata(id: number): void {
+    this.http.get<any[]>(`${this.baseUrl}/photos/albums`).subscribe(albums => {
+      const currentAlbum = albums.find(a => a.id === id);
+      if (currentAlbum) {
+        this.albumTitle = currentAlbum.name.toUpperCase().replace(/-/g, ' ');
+        this.cdr.detectChanges();
+      }
+    });
   }
 
   prevPhoto(event: Event): void {
@@ -108,30 +115,21 @@ export class AlbumComponent implements OnInit {
     [nextIndex, prevIndex].forEach(idx => {
       const img = new Image();
       const url = this.albumPhotos[idx].imageUrl;
-      img.src = url.startsWith('http') ? url : this.baseUrl + url;
+      img.src = url.startsWith('http') ? url : url;
     });
   }
 
   goBackToCategory(): void {
-    const currentId = this.setId.toLowerCase();
-    let parentCat = 'art-shoots';
-
-    if (currentId.startsWith('reportage')) {
-      parentCat = 'reportage';
-    } else if (currentId.startsWith('commercial')) {
-      parentCat = 'commercial';
-    }
-
+    // Определяем родительскую категорию для возврата
+    this.http.get<any[]>(`${this.baseUrl}/photos/albums`).subscribe(albums => {
+      const currentAlbum = albums.find(a => a.id === this.albumId);
+    const parentCat = currentAlbum ? currentAlbum.categorySlug : 'art';
     this.router.navigate(['/category', parentCat]);
+    });
   }
 
   getCleanAlbumTitle(): string {
-    return this.setId
-      .replace(/art-shoots-/i, '')
-      .replace(/reportage-/i, '')
-      .replace(/commercial-/i, '')
-      .replace(/-/g, ' ')
-      .toUpperCase();
+    return this.albumTitle;
   }
 
   trackByPhotoId(index: number, item: PhotoItem): number {
@@ -147,7 +145,7 @@ export class AlbumComponent implements OnInit {
 
   onWheelScroll(event: WheelEvent, element: HTMLElement): void {
     if (element) {
-      event.preventDefault(); // Предотвращаем скролл страницы
+      event.preventDefault();
       element.scrollBy({ left: event.deltaY < 0 ? -200 : 200, behavior: 'smooth' });
     }
   }

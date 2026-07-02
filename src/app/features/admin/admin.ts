@@ -4,10 +4,14 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { forkJoin } from 'rxjs';
+import { CdkDragDrop, moveItemInArray, DragDropModule } from '@angular/cdk/drag-drop';
 
 interface AlbumItem {
-  id: string;
+  id: number;          
   name: string;
+  slug: string;        
+  categorySlug: string; 
+  categoryName: string; 
 }
 
 interface UploadItem {
@@ -22,14 +26,14 @@ interface PhotoItem {
   title: string;
   description: string;
   imageUrl: string;
-  category: string;
+  albumId: number;     
   isMain: boolean;
 }
 
 @Component({
   selector: 'app-admin',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [CommonModule, RouterModule, FormsModule, DragDropModule],
   templateUrl: './admin.html',
   styleUrls: ['./admin.css']
 })
@@ -41,12 +45,12 @@ export class AdminComponent implements OnInit {
   
   uploadQueueCreate: UploadItem[] = []; 
   uploadQueueAppend: UploadItem[] = []; 
-  mainPhotoIndexCreate: number = 0; // Индекс главной фотографии при создании альбома
+  mainPhotoIndexCreate: number = 0; 
   newAlbumCategory: string = 'art-shoots';
   newAlbumName: string = '';
 
   albums: AlbumItem[] = [];
-  selectedAlbumId: string = '';
+  selectedAlbumId: number | '' = ''; 
   renameAlbumName: string = '';
   albumPhotos: PhotoItem[] = []; 
 
@@ -58,20 +62,10 @@ export class AdminComponent implements OnInit {
   }
 
   loadAlbums(): void {
-    this.http.get<string[]>(`${this.baseUrl}/photos/albums`)
+    this.http.get<AlbumItem[]>(`${this.baseUrl}/photos/albums`)
       .subscribe({
-        next: (folders) => {
-          // ИСПРАВЛЕНО: чистим ID от возможных лишних пробелов или путей, которые мог вернуть C#
-          const excludedAlbums = ['reportage', 'art-shoots', 'commercial'];
-          this.albums = folders
-            .map(f => f.trim())
-            .filter(id => !excludedAlbums.includes(id))
-            .map(cleanId => {
-              return {
-                id: cleanId,
-                name: cleanId.replace(/-/g, ' ').toUpperCase()
-              };
-            });
+        next: (data) => {
+          this.albums = data;
         },
         error: (err) => console.error('Ошибка загрузки альбомов:', err)
       });
@@ -95,18 +89,20 @@ export class AdminComponent implements OnInit {
 
     if (mode === 'create') {
       this.uploadQueueCreate = queue;
-      this.mainPhotoIndexCreate = 0; // Сбрасываем при новом выборе
+      this.mainPhotoIndexCreate = 0;
     } else {
       this.uploadQueueAppend = queue;
     }
   }
 
   onAlbumSelectChange(): void {
-    const found = this.albums.find(a => a.id === this.selectedAlbumId);
-    if (found) {
-      this.renameAlbumName = found.name;
-      this.loadAlbumPhotos(this.selectedAlbumId); 
-      this.uploadQueueAppend = [];
+    if (this.selectedAlbumId !== '') {
+      const found = this.albums.find(a => a.id === Number(this.selectedAlbumId));
+      if (found) {
+        this.renameAlbumName = found.name;
+        this.loadAlbumPhotos(Number(this.selectedAlbumId)); 
+        this.uploadQueueAppend = [];
+      }
     } else {
       this.renameAlbumName = '';
       this.albumPhotos = [];
@@ -114,8 +110,10 @@ export class AdminComponent implements OnInit {
     }
   }
 
-  loadAlbumPhotos(albumId: string): void {
-    this.http.get<PhotoItem[]>(`${this.baseUrl}/photos?category=${encodeURIComponent(albumId)}`)
+  loadAlbumPhotos(albumId: number): void {
+    this.albumPhotos = []; 
+
+    this.http.get<PhotoItem[]>(`${this.baseUrl}/photos?albumId=${albumId}`)
       .subscribe({
         next: (photos) => {
           this.albumPhotos = photos;
@@ -127,43 +125,56 @@ export class AdminComponent implements OnInit {
       });
   }
 
-  uploadBulk(mode: 'create' | 'append', fileInput: HTMLInputElement): void {
-    let targetAlbumId = '';
-    let currentQueue: UploadItem[] = [];
+  trackByPhotoId(index: number, item: PhotoItem): number {
+    return item.id;
+  }
 
+  uploadBulk(mode: 'create' | 'append', fileInput: HTMLInputElement): void {
     if (mode === 'create') {
       if (!this.newAlbumName.trim()) {
         alert('Введите название для нового альбома!');
         return;
       }
-      const slugName = this.newAlbumName.trim().toLowerCase().replace(/\s+/g, '-');
-      targetAlbumId = `${this.newAlbumCategory}-${slugName}`;
-      currentQueue = this.uploadQueueCreate;
-    } else {
-      if (!this.selectedAlbumId) {
-        alert('Альбом для загрузки не выбран!');
+      if (this.uploadQueueCreate.length === 0) {
+        alert('Выберите фотографии для нового альбома!');
         return;
       }
-      targetAlbumId = this.selectedAlbumId;
-      currentQueue = this.uploadQueueAppend;
+
+      this.loading.set(true);
+
+      let catId = 1; // 'art'
+      if (this.newAlbumCategory === 'commercial') catId = 2;
+      if (this.newAlbumCategory === 'reportage') catId = 3;
+
+      const albumDto = {
+        name: this.newAlbumName.trim(),
+        categoryId: catId 
+      };
+
+      this.http.post<AlbumItem>(`${this.baseUrl}/photos/album/create`, albumDto)
+        .subscribe({
+          next: (createdAlbum) => {
+            this.executePhotosUpload(createdAlbum.id, this.uploadQueueCreate, mode, fileInput);
+          },
+          error: (err) => {
+            console.error('Ошибка создания альбома:', err);
+            this.loading.set(false);
+            alert(`Не удалось создать альбом. Статус: ${err.status}`);
+          }
+        });
+    } else {
+      this.loading.set(true);
+      this.executePhotosUpload(Number(this.selectedAlbumId), this.uploadQueueAppend, mode, fileInput);
     }
+  }
 
-    if (currentQueue.length === 0) {
-      alert('Выберите хотя бы одну фотографию!');
-      return;
-    }
-
-    this.loading.set(true);
-
-    const requests = currentQueue.map(item => {
+  private executePhotosUpload(albumId: number, queue: UploadItem[], mode: 'create' | 'append', fileInput: HTMLInputElement): void {
+    const requests = queue.map(item => {
       const formData = new FormData();
       formData.append('file', item.file);
       formData.append('title', item.title || 'Без названия');
       formData.append('description', item.description || ''); 
-      formData.append('albumId', targetAlbumId.trim()); // ИСПРАВЛЕНО: убираем случайные пробелы в ID
-      
-      // Выводим в консоль для отладки у неё на ПК
-      console.log(`Отправка файла на: ${this.baseUrl}/photos/upload, AlbumID: ${targetAlbumId.trim()}`);
+      formData.append('albumId', albumId.toString()); 
       
       return this.http.post<PhotoItem>(`${this.baseUrl}/photos/upload`, formData);
     });
@@ -173,58 +184,65 @@ export class AdminComponent implements OnInit {
         if (mode === 'create' && responses.length > 0) {
           const mainPhoto = responses[this.mainPhotoIndexCreate];
           if (mainPhoto && mainPhoto.id) {
-            // Назначаем главную фотографию
             this.http.post(`${this.baseUrl}/photos/set-main/${mainPhoto.id}`, {}).subscribe();
           }
         }
         
-        alert(`Успешно загружено кадров: ${currentQueue.length} шт.`);
+        alert(`Успешно загружено кадров: ${queue.length} шт.`);
         this.loading.set(false);
         fileInput.value = '';
+        
         if (mode === 'create') {
           this.uploadQueueCreate = [];
           this.newAlbumName = '';
           this.loadAlbums();
         } else {
           this.uploadQueueAppend = [];
-          this.loadAlbumPhotos(this.selectedAlbumId); 
+          this.loadAlbumPhotos(albumId); 
         }
       },
       error: (err) => {
-        console.error('Критическая ошибка при forkJoin загрузке:', err);
+        console.error('Критическая ошибка при загрузке картинок:', err);
         this.loading.set(false);
-        // ИСПРАВЛЕНО: Выводим подробности ошибки прямо в alert, чтобы она могла сказать тебе точный статус
-        alert(`Ошибка при загрузке. Статус: ${err.status}. Сообщение: ${err.message}`);
+        alert(`Ошибка при загрузке изображений. Статус: ${err.status}.`);
       }
     });
   }
 
+  dropPhotos(event: CdkDragDrop<PhotoItem[]>) {
+    if (this.albumPhotos) {
+      moveItemInArray(this.albumPhotos, event.previousIndex, event.currentIndex);
+    }
+  }
+
   renameAlbum(): void {
-    if (!this.selectedAlbumId || !this.renameAlbumName.trim()) return;
-    this.http.post(`${this.baseUrl}/photos/album/rename`, { 
-      oldAlbumId: this.selectedAlbumId.trim(), 
-      newAlbumName: this.renameAlbumName.trim() 
-    })
-    .subscribe({
-      next: () => {
-        alert('Альбом успешно переименован!');
-        this.selectedAlbumId = '';
-        this.renameAlbumName = '';
-        this.albumPhotos = [];
-        this.loadAlbums();
-      },
-      error: (err) => console.error('Ошибка изменения папки:', err)
-    });
+    if (this.selectedAlbumId === '' || !this.renameAlbumName.trim()) return;
+    
+    const dto = {
+      albumId: Number(this.selectedAlbumId),
+      newAlbumName: this.renameAlbumName.trim()
+    };
+
+    this.http.post(`${this.baseUrl}/photos/album/rename`, dto)
+      .subscribe({
+        next: () => {
+          alert('Альбом успешно переименован!');
+          this.selectedAlbumId = '';
+          this.renameAlbumName = '';
+          this.albumPhotos = [];
+          this.loadAlbums();
+        },
+        error: (err) => console.error('Ошибка изменения папки:', err)
+      });
   }
 
   deleteAlbum(): void {
-    if (!this.selectedAlbumId) return;
-    const confirmDelete = confirm(`Вы уверены, что хотите НАВСЕГДА удалить альбом "${this.selectedAlbumId}"?`);
+    if (this.selectedAlbumId === '') return;
+    const confirmDelete = confirm(`Вы уверены, что хотите НАВСЕГДА удалить этот альбом?`);
     if (!confirmDelete) return;
 
-    this.http.delete(`${this.baseUrl}/photos/album/delete/${encodeURIComponent(this.selectedAlbumId.trim())}`)
+    this.http.delete(`${this.baseUrl}/photos/album/delete/${this.selectedAlbumId}`)
       .subscribe({
-        // ИСПРАВЛЕНО: было 'root', должно быть 'next'
         next: () => {
           alert('Альбом удален.');
           this.selectedAlbumId = '';
@@ -265,11 +283,39 @@ export class AdminComponent implements OnInit {
       .subscribe({
         next: () => {
           alert('Этот кадр успешно назначен главной обложкой альбома!');
-          this.loadAlbumPhotos(this.selectedAlbumId); 
+          if (this.selectedAlbumId !== '') {
+            this.loadAlbumPhotos(Number(this.selectedAlbumId)); 
+          }
         },
         error: (err) => {
           console.error(err);
           alert('Не удалось назначить обложку.');
+        }
+      });
+  }
+
+  savePhotosOrder(): void {
+    if (this.selectedAlbumId === '' || this.albumPhotos.length === 0) {
+      alert('Нет данных для сохранения порядка.');
+      return;
+    }
+
+    const photoIds = this.albumPhotos.map(p => p.id);
+
+    const dto = {
+      albumId: Number(this.selectedAlbumId),
+      photoIds: photoIds
+    };
+
+    // ИСПРАВЛЕНО: Изменен роут на корректный и метод на http.post для совместимости с контроллером
+    this.http.post(`${this.baseUrl}/photos/reorder`, dto)
+      .subscribe({
+        next: (res: any) => {
+          alert('Порядок фотографий успешно сохранен!');
+        },
+        error: (err) => {
+          console.error('Ошибка сохранения порядка:', err);
+          alert(`Не удалось сохранить порядок. Статус: ${err.status}`);
         }
       });
   }
@@ -293,7 +339,6 @@ export class AdminComponent implements OnInit {
         },
         error: (err) => {
           console.error('Ошибка при удалении заявки:', err);
-          // Оптимистичное удаление для UI
           this.feedbacks.update(f => f.filter(item => item.id !== id));
         }
       });
@@ -309,7 +354,6 @@ export class AdminComponent implements OnInit {
         },
         error: (err) => {
           console.error('Ошибка при обновлении статуса заявки:', err);
-          // Оптимистичное обновление для UI
           this.feedbacks.update(f => f.map(item => item.id === feedback.id ? { ...item, isRead: newState } : item));
         }
       });

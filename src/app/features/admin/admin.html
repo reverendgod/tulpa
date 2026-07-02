@@ -4,7 +4,7 @@
     <a routerLink="/" class="back-to-site-btn">← Вернуться на сайт</a>
   </div>
 
-  <h1 class="admin-header-title">Панель управления // TULPA</h1>
+  <h1 class="admin-header-title">Панель управления</h1>
 
   <div class="admin-card">
     <h2>Создание альбома</h2>
@@ -120,19 +120,31 @@
       </div>
       
       <div class="album-photos-section" *ngIf="selectedAlbumId">
-        <label class="form-label" style="color: #666; margin-top: 40px; margin-bottom: 15px; display: block;">
-          Текущие кадры в альбоме (Всего: {{ albumPhotos.length }}):
-        </label>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 40px; margin-bottom: 15px;">
+          <label class="form-label" style="color: #666; margin: 0;">
+            Текущие кадры в альбоме (Всего: {{ albumPhotos.length }}):
+          </label>
+          
+          <button 
+            type="button" 
+            class="submit-btn edit-btn" 
+            *ngIf="albumPhotos.length > 0"
+            (click)="savePhotosOrder()"
+            style="margin: 0; padding: 8px 16px; font-size: 0.8rem; width: auto;">
+            СОХРАНИТЬ ПОРЯДОК КАДРОВ
+          </button>
+        </div>
 
-        <div class="photos-management-grid">
-          <div class="photo-manage-card" *ngFor="let photo of albumPhotos">
+        <div class="photos-management-grid" cdkDropList cdkDropListOrientation="mixed" (cdkDropListDropped)="dropPhotos($event)">
+          
+          <div class="photo-manage-card" *ngFor="let photo of albumPhotos; trackBy: trackByPhotoId" cdkDrag>
             
             <button type="button" class="photo-delete-badge" (click)="deletePhoto(photo.id)">×</button>
             
             <div class="main-cover-badge" *ngIf="photo.isMain">Обложка</div>
             
             <div class="photo-manage-thumb">
-              <img [src]="baseUrl + photo.imageUrl" alt="Photo">
+              <img [src]="photo.imageUrl" alt="Photo">
             </div>
 
             <div class="photo-manage-inputs">
@@ -158,9 +170,8 @@
             </div>
 
           </div>
-        </div>
 
-        <div *ngIf="albumPhotos.length === 0" style="text-align: center; color: #444444; font-size: 0.85rem; padding: 20px 0;">
+        </div> <div *ngIf="albumPhotos.length === 0" style="text-align: center; color: #444444; font-size: 0.85rem; padding: 20px 0;">
           В этом альбоме ещё нет фотографий.
         </div>
       </div>

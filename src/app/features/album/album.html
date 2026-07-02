@@ -43,10 +43,10 @@
         </div>
 
         <div class="photo-meta-sidebar" *ngIf="(albumPhotos[currentPhotoIndex].title && albumPhotos[currentPhotoIndex].title !== 'Без названия') || (albumPhotos[currentPhotoIndex].description && albumPhotos[currentPhotoIndex].description !== 'Автозагрузка сканером')">
-          <h3 class="photo-title" *ngIf="albumPhotos[currentPhotoIndex].title && albumPhotos[currentPhotoIndex].title !== 'Без названия'">
+          <h3 class="photo-title">
             {{ albumPhotos[currentPhotoIndex].title }}
           </h3>
-          <p class="photo-description" *ngIf="albumPhotos[currentPhotoIndex].description && albumPhotos[currentPhotoIndex].description !== 'Автозагрузка сканером'">
+          <p class="photo-description">
             {{ albumPhotos[currentPhotoIndex].description }}
           </p>
         </div>

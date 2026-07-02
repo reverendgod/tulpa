@@ -6,12 +6,13 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "deploy": "ng build --configuration production && scp -r dist/tulpa/browser/* root@31.77.67.3:/var/www/html/",
+    "deploy": "ng build --configuration production && ssh root@31.77.67.3 \"rm -rf /var/www/frontend/browser/*\" && scp -r dist/tulpa/browser/* root@31.77.67.3:/var/www/frontend/browser/",
     "test": "ng test"
   },
   "private": true,
   "packageManager": "npm@11.9.0",
   "dependencies": {
+    "@angular/cdk": "^21.2.14",
     "@angular/common": "^21.2.0",
     "@angular/compiler": "^21.2.0",
     "@angular/core": "^21.2.0",
